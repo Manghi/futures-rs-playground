@@ -6,3 +6,12 @@ authors = ["Manghi <amunimanghi@gmail.com>"]
 [dependencies]
 futures = "0.1"
 tokio-core = "0.1"
+
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[[bin]]
+name = "main2"
+path = "src/main2.rs"
