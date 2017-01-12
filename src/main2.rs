@@ -5,9 +5,11 @@ use std::thread;
 use futures::{Future, Oneshot};
 
 fn main() {
-    match read_name() {
-        Err(_) => println!("Hey there stranger..."),
-        Ok(name) => println!("Hello, {}!", name.trim()),
+    loop {
+        match read_name() {
+            Err(_) => println!("Hey there stranger..."),
+            Ok(name) => println!("Hello, {}!", name.trim()),
+        }
     }
 }
 
@@ -16,7 +18,11 @@ fn read_name() -> Result<String> {
     match read_input().select(timeout()).wait() {
         // Error type is Task::Cancelled so we're going to assume that is never going to happen
         Err(_) => unreachable!(),
-        Ok((complete, _)) => complete, // remember select will chose two, and give you both ordered
+        Ok((complete, input_future)) =>
+        {
+            drop(input_future);
+            complete
+        }, // remember select will chose two, and give you both ordered
     }
 }
 

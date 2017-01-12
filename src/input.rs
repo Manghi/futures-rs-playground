@@ -41,10 +41,14 @@ impl Future for ReadLine {
 
 fn read_line() -> io::Result<String> {
     use std::io::BufRead;
+    use std::io::Write;
 
+    print!("Please enter your name: ");
+    let _ = io::stdout().flush();
     let input = io::stdin();
     let mut locked = input.lock();
     let mut bfr = String::new();
+
 
     match locked.read_line(&mut bfr) {
         Ok(_) => Ok(bfr),
