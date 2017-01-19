@@ -8,6 +8,13 @@ futures = "0.1"
 tokio-core = "0.1"
 tokio-service = "0.1"
 tokio-proto = "0.1"
+tokio-minihttp = {git = "https://github.com/tokio-rs/tokio-minihttp.git"}
+r2d2 = "0.7.1"
+r2d2_postgres = {git = "https://github.com/sfackler/r2d2-postgres.git"}
+futures-cpupool = "0.1"
+rustc-serialize = "0.3"
+rand = "0.3"
+
 
 [[bin]]
 name = "main"
@@ -16,3 +23,11 @@ path = "src/main.rs"
 [[bin]]
 name = "main2"
 path = "src/main2.rs"
+
+[[bin]]
+name = "main3"
+path = "src/main3.rs"
+
+[[bin]]
+name = "main4"
+path = "src/main4.rs"
