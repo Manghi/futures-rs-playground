@@ -16,6 +16,8 @@ use std::str;
 use std::thread;
 
 use futures::{Future, Stream, Sink};
+use futures::sync::mpsc;
+
 use tokio_core::net::{UdpSocket, UdpCodec};
 use tokio_core::reactor::Core;
 
@@ -40,7 +42,7 @@ impl UdpCodec for PacketCodec {
     }
 }
 
-fn udp_listen() {
+fn udp_listen(tx_1: mpsc::Sender<String>) {
     let mut core = Core::new().unwrap();
     let handle = core.handle();
 
@@ -56,8 +58,11 @@ fn udp_listen() {
     // Listen for new messages and then send back a modified responses
     let reader = reader.and_then(|(socket, data)| {
         let stringy = String::from_utf8(data);
-        println!("socket: {:?}, data: {:?}", socket, stringy);
 
+        let message : String = format!("socket: {:?}, data: {:?}", socket, stringy);
+
+        println!("Sending...");
+        tx_1.send(message);
         Ok(())
     });
 
@@ -80,9 +85,17 @@ fn udp_listen() {
 fn main() {
     drop(env_logger::init());
 
-    thread::spawn(|| udp_listen());
+    let (tx_1, rx_1) = mpsc::channel::<String>(10); // backpressure of 10
+
+
+    thread::spawn(|| udp_listen(tx_1));
+
 
     loop {
+        rx_1.then(|msg| {
+            println!("Received message:... {}", msg.unwrap());
+            Ok(())
+        });
         thread::sleep(std::time::Duration::from_secs(1));
     }
 }
