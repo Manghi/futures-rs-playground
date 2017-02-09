@@ -14,6 +14,7 @@ r2d2_postgres = {git = "https://github.com/sfackler/r2d2-postgres.git"}
 futures-cpupool = "0.1"
 rustc-serialize = "0.3"
 rand = "0.3"
+env_logger = "*"
 
 
 [[bin]]
@@ -35,3 +36,7 @@ path = "src/main4.rs"
 [[bin]]
 name = "main5"
 path = "src/main5.rs"
+
+[[bin]]
+name = "main6"
+path = "src/main6.rs"

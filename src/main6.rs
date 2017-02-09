@@ -13,12 +13,18 @@ extern crate futures;
 use std::io;
 use std::net::SocketAddr;
 use std::str;
+use std::thread;
 
 use futures::{Future, Stream, Sink};
 use tokio_core::net::{UdpSocket, UdpCodec};
 use tokio_core::reactor::Core;
 
 pub struct PacketCodec;
+
+pub struct UdpManager {
+        //reader: Stream,
+        //writer: Sink,
+}
 
 impl UdpCodec for PacketCodec {
     type In = (SocketAddr, Vec<u8>);
@@ -34,9 +40,7 @@ impl UdpCodec for PacketCodec {
     }
 }
 
-fn main() {
-    drop(env_logger::init());
-
+fn udp_listen() {
     let mut core = Core::new().unwrap();
     let handle = core.handle();
 
@@ -71,5 +75,14 @@ fn main() {
     handle.spawn( writer);
 
     core.run(reader).unwrap();
+}
 
+fn main() {
+    drop(env_logger::init());
+
+    thread::spawn(|| udp_listen());
+
+    loop {
+        thread::sleep(std::time::Duration::from_secs(1));
+    }
 }
